@@ -9,6 +9,7 @@
 <p>Link: <input placeholder="Ссылка на пост" type="textbox" id="permlnk" style="width:340px; height:20px"></p>
 <p>Text: <input placeholder="Любой текст" type="textbox" id="text_comment" style="width:340px; height:20px"></p>
 <p>Timer: <input placeholder="секунд" type="textbox" id="timer" style="width:60px; height:20px"></p>
+<p>Limit VP: <input placeholder="%" type="textbox" id="limit" style="width:60px; height:20px"></p>
 <p><input type="button" id="stat" value="Поехали!"style="width:70px; height:20px"></p>
 
 <script>
@@ -23,9 +24,10 @@ var wif =document.getElementById("key").value;
 //var wif = 'ваш приватный постинг ключ';
 var link=document.getElementById("permlnk").value;
 var interlived=document.getElementById("timer").value;
+var votepower=document.getElementById("limit").value;
 var timerId = setInterval(function() {
-posting();
-
+vp();
+//posting();
 }, +interlived*1000);
 
 function posting(){
@@ -48,6 +50,34 @@ if(err){console.log(err); }  else {ins('Комментарий опублико�
 });
 
 };
+////
+function vp(){
+steem.api.getAccounts([account], function(err, result){
+	var power = result[0].voting_power;
+	var votetime = Date.parse(result[0].last_vote_time);
+		steem.api.getDynamicGlobalProperties(function(err, result) {  
+			var curtime = Date.parse(result.time);
+			steem.api.getConfig(function(err, result) {
+				var regentime = 10000/result.STEEMIT_VOTE_REGENERATION_SECONDS;
+			var volume =(power+((curtime-votetime)/1000)*regentime);
+			var charge;
+			if(volume>=10000){
+			charge=100.00;
+			}
+			else charge=+(volume/100).toFixed(2);
+			if(charge<=votepower){
+			ins('Текущий Уровень заряда VP '+'('+charge+'%)'+' меньше допустимого: '+votepower+'%'+'\nРобот деактивирован');
+			setTimeout(function() {
+  clearInterval(timerId);
+  alert( 'Робот остановлен' );
+}, 1000);
+			} else {posting();ins('Уровень заряда VP: '+charge+'%');}
+			//ins('Уровень заряда VP: '+charge+'%');
+	});
+	});	
+	});
+};
+////
 };
 ins = function(x){
  document.getElementById('out').insertAdjacentHTML('beforeend', '<p class="item">' + x + '</p>');
