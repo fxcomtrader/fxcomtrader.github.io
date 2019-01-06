@@ -1,5 +1,16 @@
 <html><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta http-equiv="Cache-Control" content="no-cache">
 <script src="./golos.min.js"></script>
+
+	 <h3>Робот самоапарь для БЧ Golos.io</h3>
+	 <em>Размещает комментарии под постами и апвоутит эти комментарии.<br>Робот активен когда эта страница открыта в браузере.</em><p></p>
+<p>Account: <input placeholder="Без знака @" type="textbox" id="user" style="width:140px; height:20px"></p>
+<p>Key: <input placeholder="Приватный постинг ключ" type="textbox" id="key" style="width:340px; height:20px"></p>
+<p>Link: <input placeholder="Ссылка на пост" type="textbox" id="permlnk" style="width:340px; height:20px"></p>
+<p>Text: <input placeholder="Любой текст" type="textbox" id="text_comment" style="width:340px; height:20px"></p>
+<p>Timer: <input placeholder="секунд" type="textbox" id="timer" style="width:60px; height:20px"></p>
+<p>Limit VP: <input placeholder="%" type="textbox" id="limit" style="width:60px; height:20px"></p>
+<p><input type="button" id="stat" value="Поехали!"style="width:70px; height:20px"></p>
+
 <script>
 golos.config.set('websocket','wss://ws.golos.io');
 golos.config.set('address_prefix','GLS');
@@ -73,5 +84,4 @@ ins = function(x){
  }
 </script>
 <p><b id="out"></b></p>
-
 </html>
