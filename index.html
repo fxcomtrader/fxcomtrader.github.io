@@ -1,21 +1,9 @@
-<html><meta http-equiv="content-type" content="text/html; charset=utf-8"; "Cache-Control" content="no-cache">
-
-<script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
-
-	 <h3>Робот самоапарь для БЧ Golos.io</h3>
-	 <em>Размещает комментарии под постами и апвоутит эти комментарии.<br>Робот активен когда эта страница открыта в браузере.</em><p></p>
-<p>Account: <input placeholder="Без знака @" type="textbox" id="user" style="width:140px; height:20px"></p>
-<p>Key: <input placeholder="Приватный постинг ключ" type="textbox" id="key" style="width:340px; height:20px"></p>
-<p>Link: <input placeholder="Ссылка на пост" type="textbox" id="permlnk" style="width:340px; height:20px"></p>
-<p>Text: <input placeholder="Любой текст" type="textbox" id="text_comment" style="width:340px; height:20px"></p>
-<p>Timer: <input placeholder="секунд" type="textbox" id="timer" style="width:60px; height:20px"></p>
-<p>Limit VP: <input placeholder="%" type="textbox" id="limit" style="width:60px; height:20px"></p>
-<p><input type="button" id="stat" value="Поехали!"style="width:70px; height:20px"></p>
-
+<html><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta http-equiv="Cache-Control" content="no-cache">
+<script src="./golos.min.js"></script>
 <script>
-steem.api.setOptions({ url: 'wss://ws.golos.io' });
-steem.config.set('address_prefix','GLS');
-steem.config.set('chain_id','782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12');
+golos.config.set('websocket','wss://ws.golos.io');
+golos.config.set('address_prefix','GLS');
+golos.config.set('chain_id','782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12');
 document.getElementById('stat').onclick = function() {
 ins('Робот активирован: '+new Date());;
 var account=document.getElementById("user").value;
@@ -40,9 +28,9 @@ var post_body=document.getElementById("text_comment").value+' ';
 var title ='';
 var jsonMetadata = {};
 var percent=10000;	
-steem.broadcast.comment(wif,parent_author,parent_permlink,author,permlink,title,post_body,jsonMetadata,function(err, result) {
+golos.broadcast.comment(wif,parent_author,parent_permlink,author,permlink,title,post_body,jsonMetadata,function(err, result) {
 if(err){console.log(err); } else {
-steem.broadcast.vote(wif, account, author, permlink, percent, function(err, result) {
+golos.broadcast.vote(wif, account, author, permlink, percent, function(err, result) {
 if(err){console.log(err); }  else {ins('Комментарий опубликован, апвоут поставлен: '+new Date());
   }
 });
@@ -52,12 +40,12 @@ if(err){console.log(err); }  else {ins('Комментарий опублико�
 };
 ////
 function vp(){
-steem.api.getAccounts([account], function(err, result){
+golos.api.getAccounts([account], function(err, result){
 	var power = result[0].voting_power;
 	var votetime = Date.parse(result[0].last_vote_time);
-		steem.api.getDynamicGlobalProperties(function(err, result) {  
+		golos.api.getDynamicGlobalProperties(function(err, result) {  
 			var curtime = Date.parse(result.time);
-			steem.api.getConfig(function(err, result) {
+			golos.api.getConfig(function(err, result) {
 				var regentime = 10000/result.STEEMIT_VOTE_REGENERATION_SECONDS;
 			var volume =(power+((curtime-votetime)/1000)*regentime);
 			var charge;
@@ -85,4 +73,5 @@ ins = function(x){
  }
 </script>
 <p><b id="out"></b></p>
+
 </html>
