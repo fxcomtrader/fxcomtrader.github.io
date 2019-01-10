@@ -7,6 +7,7 @@
 <p>Key: <input placeholder="Приватный постинг ключ" type="textbox" id="key" style="width:340px; height:20px"></p>
 <p>Link: <input placeholder="Ссылка на пост" type="textbox" id="permlnk" style="width:340px; height:20px"></p>
 <p>Text: <input placeholder="Любой текст" type="textbox" id="text_comment" style="width:340px; height:20px"></p>
+<p>Hidden comments:<input type="checkbox" id="hid"></p>
 <p>Timer: <input placeholder="секунд" type="textbox" id="timer" style="width:60px; height:20px"></p>
 <p>Limit VP: <input placeholder="%" type="textbox" id="limit" style="width:60px; height:20px"></p>
 <p><input type="button" id="stat" value="Поехали!"style="width:70px; height:20px"></p>
@@ -37,8 +38,9 @@ var author=account;
 var permlink='re-'+parent_author+'-'+parent_permlink+dt_now;
 var post_body=document.getElementById("text_comment").value+' ';
 var title ='';
-var jsonMetadata = {};
-var percent=10000;	
+var jsonMetadata;
+var percent=10000;
+if(document.getElementById('hid').checked) {jsonMetadata = {"hash":[""]};} else jsonMetadata = {};
 golos.broadcast.comment(wif,parent_author,parent_permlink,author,permlink,title,post_body,jsonMetadata,function(err, result) {
 if(err){console.log(err); } else {
 golos.broadcast.vote(wif, account, author, permlink, percent, function(err, result) {
